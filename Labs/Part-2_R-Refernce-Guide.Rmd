@@ -1,0 +1,180 @@
+---
+title: "Part 2_R Reference Guid"
+author: "E. Baylor"
+date: "12/16/2021"
+output: html_document
+---
+# Part 2: Data Analysis {.tabset .tabset-pills}
+
+## Data Exploration 
+
+### Numerical Exploration
+```{r}
+require(here)
+delomys <- read.csv(here("data", "delomys.csv"))
+summary(delomys)
+shapiro.test(delomys$body_mass)
+
+shapiro.test(delomys$body_length)
+```
+```{r fig.width=10}
+
+
+require(palmerpenguins)
+
+
+plot(bill_length_mm ~ body_mass_g, data = penguins)
+```
+
+### Histogram of Body Mass
+
+```{r}
+hist(delomys$body_mass, breaks = 10, main = "Hist of Delomys Body Mass", xlab = "Body Mass", col = "#DDA0DD" )
+```
+
+### Histogram of Body Length
+```{r}
+hist(delomys$body_length, breaks = 10, main = "Hist of Delomys Body Length", xlab = "Body Length", col = "#FFE1FF" )
+```
+
+### Column Binomial
+```{r}
+boxplot(delomys$body_mass~delomys$binomial, col = "#FFE1FF")
+
+boxplot(delomys$body_mass~delomys$sex, col = "#EED2EE")
+
+boxplot(delomys$body_mass~delomys$binomial * delomys$sex, col = "#8B7B8B", ylab = "Body Mass", xlab = "", names = c("Female Dorsalis", "Female \nSublineatus", "Male Dorsalis", "Male \nSublineatus"), main = "Delomys Species x Sex")
+```
+
+### Question 1
+Body mass and body length have a positive linear relationship.
+
+### Question 2
+The body mass and body length of Delomys histograms above are both skewed to the right. However, the body length histogram has a longer tail to the right opposed to the body mass histogram.
+
+### Question 3
+The normality test for body masses and body length is normally distributed due to the p-value (4.33e-05). The histograms for body mass and body length depicts a bell shape, which we can infer that we can reject the null hypothesis.
+ 
+### Question 4
+The conditional box plots shows the difference between male and female sexes with both Dorsalis and Sublineatus species. It shows this by the male species weighing more in both the Dorsalis and Sublineatus, but with a very little difference between both of the male species.
+
+## Model Building
+
+### Model 1
+```{r}
+fit1 = lm(delomys$body_length ~ delomys$body_mass)
+```
+
+### Model 2
+```{r}
+fit2 = lm(delomys$body_mass ~ delomys$sex)
+```
+
+### Model 3
+```{r}
+fit3 = lm(delomys$body_mass ~ delomys$binomial)
+```
+
+### Model 4
+```{r}
+fit4 = lm(delomys$body_mass ~ delomys$sex + delomys$binomial)
+```
+
+### Model 5
+```{r}
+fit5 = lm(delomys$body_mass ~ delomys$sex * delomys$binomial)
+```
+
+## Model Diagnostics
+```{r}
+shapiro.test(residuals(fit1))
+shapiro.test(residuals(fit2))
+shapiro.test(residuals(fit3))
+shapiro.test(residuals(fit4))
+shapiro.test(residuals(fit5))
+```
+
+### Question 5
+You conclude that residual normality based on the numerical and graphical diagnostics that we can reject the null hypothesis. 
+
+### Question 6
+Violations of the normality assumption are not equally severe for all the models because we there are some explanatory variables that may have implicit factors on them.
+
+## Model Interpretation
+```{r}
+knitr::kable(coef(summary(fit1)))
+knitr::kable(coef(summary(fit2)))
+knitr::kable(coef(summary(fit3)))
+knitr::kable(coef(summary(fit4)))
+knitr::kable(coef(summary(fit5)))
+```
+
+## Body Length
+
+### Question 7
+The p-value of the mass/length relationship is 2.2e-16; therefore, you can reject the null hypothesis between the two variables.
+
+### Question 8
+The expected body length of an animal that weighs 100g is 163.6747.
+```{r}
+"y= mx + b"
+y = (0.87550)*(100) + (76.12466)
+y 
+```
+
+### Question 9
+The expected body length of an animal that weighs 0g is 76.12466.
+```{r}
+"y= mx + b"
+y = (0.87550)*(0) + (76.12466)
+y
+```
+
+
+## Model Coefficient
+
+### Question 10
+The base level for sex is 42.7115.
+
+### Question 11
+The base level for binomial is 46.7524.
+
+### Question 12
+Males is the heavier sex.
+
+### Question 13
+Sublineatus is the heavier species.
+
+## Body Mass: ANOVA
+```{r}
+knitr::kable(anova(fit1))
+knitr::kable(anova(fit2))
+knitr::kable(anova(fit3))
+knitr::kable(anova(fit4))
+knitr::kable(anova(fit5))
+```
+
+
+### Question 14
+Sex and species are significant predictors for determining the body mass.
+
+### Question 15
+There is a significant interaction when because of the p-values, exepts for the factorial interaction between the sex and species.
+
+### Question 16
+The significance (as measured by p-value) of either of the main effects (sex and species) differ between the single-predictor models, the additive model and the interactive model by  having a significant interaction in the single-predictor and additive models. Oppose to the interactive model where as it is only significant when it is on its own and not when it interacts together.
+
+## Model Comparison: Body Mass
+```{r}
+AIC(fit1)
+AIC(fit2)
+AIC(fit3)
+AIC(fit4)
+AIC(fit5)
+```
+
+### Question 17
+Models 1 and 4 have the lowest AIC.
+
+### Question 18
+Out of Models 1 and 4, I would choose model 4 to determine the body mass because it compares the sex and binomial oppose to the first model who focuses on the comparison of body mass and length.

@@ -1,0 +1,37 @@
+---
+title: "Code Chunk Demo"
+author: "E. Baylor"
+date: "10/20/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_penguin_data, echo=TRUE, eval=True}
+require(palmerpenguins)
+head(penguins)
+```
+
+```{r simple pairplot}
+plot(penguins[,3:5])
+```
+
+```{r my chunk 1}
+```
+
+```{r simple pairplot, fig.width=4, fig.asp=1}
+plot(penguins[, 3:5])
+```
+
+```{r simple pairpot, fig.width=4, fig.asp= 1/1.5}
+plot(penguins[, 3:5])
+```
+
+```{r simple pairplot, eva}
+
+
+
+
+

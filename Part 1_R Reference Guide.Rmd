@@ -1,0 +1,190 @@
+---
+title: 'Part 1: R Reference Guide'
+author: "E. Baylor"
+date: "12/16/2021"
+output: html_document
+---
+# R Reference Guide {.tabset .tabset-pills}
+
+
+## Loading Data and Packages
+```{r}
+require(here)
+library(palmerpenguins)
+
+ginkgo <- data.frame(
+  read.csv(here("data", "ginkgo_data_2021.csv"))
+)
+```
+
+
+## Data Structures
+
+### C()
+The function c() combines or concatenates its arguments into a vector (a 1-dimensional data structure consisting of 1 or more elements).
+
+All of the elements must be of the same type.
+I can’t combine character and numeric types in the same call to c()
+Here’s two examples using numeric and character data types:
+
+```{r}
+## Create a vector of numbers:
+num_vec  = c(1, 4, 8, 9, 13)
+
+##Create a vector of characters:
+char_vec = c("a", "fish", "data is cool")
+
+```
+I can show the contents of a vector by typing the name of the vector, or using the print() function.
+```{r}
+## Typing the name of the vector into the console prints the contents
+num_vec
+
+## The print() function accomplishes the same task:
+print(char_vec)
+```
+
+### Length ()
+
+The function length() is used to determine the ength of a vector of factor.
+```{r}
+length(ginkgo$petiole_length)
+```
+
+### Matrix()
+
+The function Matrix() creates the Matrix from data values.
+```{r}
+matrix(data = 0:70, nrow = 7, ncol = 7, byrow = FALSE)
+```
+
+### Data.frame()
+
+The function data.frame() is a list of two or more related variables.
+```{r}
+head(data.frame(ginkgo))
+
+```
+```{r}
+nrow(ginkgo)
+ncol(ginkgo)
+dim(ginkgo)
+```
+
+## Subsetting
+
+### $
+```{r}
+head(ginkgo$petiole_length)
+```
+
+### []
+```{r}
+ginkgo[1,]
+
+ginkgo[2,3]
+
+head(ginkgo[,3])
+```
+
+### Subset()
+```{r}
+head(subset(penguins, species == "Adelie"))
+```
+
+## Numerical Data Exploration
+
+### Summary()
+The function Summary() is used to get the summary of various model fitting functions.
+```{r}
+summary(ginkgo)
+```
+
+### Mean()
+The function mean() is used to calculate the average of a list.
+```{r}
+mean(ginkgo$notch_depth)
+```
+
+### sd()
+The function sd() is used to determine the standard deviation of any given values in x.
+```{r}
+sd(ginkgo$notch_depth)
+```
+
+## Graphical Data Exploration
+
+### Scatterplot()
+```{r}
+plot(max_width ~ max_depth, data = ginkgo, 
+     xlab = "Max Leaf Depth", ylab = "Max Lead Width",
+     main = "Scatterplot of Ginkgo Leaf Max Depth x Max Width",
+     col = "#CD8162", xlim = c(10, 150), ylim = c(10, 150), pch= 2, cex = .5)
+```
+
+### Histogram()
+```{r}
+require(palmerpenguins)
+penguins <- data.frame(penguins)
+
+hist(penguins$flipper_length_mm, breaks = 10, main = "Histogram of Penguin Flipper Lengths", xlab = "Flipper Length (mm)", col = "lightpink")
+```
+
+### Boxplot()
+```{r}
+boxplot(ginkgo$petiole_length, xlab = "Petiole Length", main = "Boxplot of Petiole Length", col = "#9BCD9B")
+```
+```{r}
+boxplot(ginkgo$seeds_present, ginkgo$max_depth, names = c("No Seeds", "Seed Presence"), main = "Boxplot of Seed Presence by the Max Leaf Depth", col = "#009ACD")
+```
+
+### Par() and Mrow of Histograms
+```{r}
+par(mfrow = c(2, 2))
+hist(ginkgo$max_depth, main = "Hist of Max Depth", xlab = "Max Depth", col = "#7CCD7C")
+
+hist(ginkgo$notch_depth, main = "Hist of Notch Depth", xlab = "Notch Depth", col = "#CDC1C5")
+
+hist(ginkgo$petiole_length, main = "Hist of Petiole Length", xlab = "Petiole Length", col = "#8B8386")
+
+hist(ginkgo$max_width, main = "Hist of Max Width", xlab = "Max Width", col = "#548B54")
+
+```
+
+## Distribution Functions
+
+### Dnorm()
+The function dnorm() calculates the density of normal distribution.
+```{r}
+dnorm(x = -7:7, mean = 1, sd = 3) 
+```
+
+### Pnorm()
+The function pnorm() calculates the distribution function of normal distribution.
+```{r}
+pnorm(0, mean = 0, sd = 3)
+```
+
+### Qnorm()
+The function qnorm() calculates the quantile function of normal distribution.
+```{r}
+qnorm(0.10, mean = 0, sd = 3)
+```
+
+### Dbinom()
+The function dbinom() calculates the density of binomial distribution.
+```{r}
+dbinom(x = 1:10, size = 10, prob = 0.3)
+```
+
+### Pbinom()
+The function pbinom() calculates the distribution function of binomial distribution.
+```{r}
+pbinom(100, size = 10, prob = 0.3)
+```
+
+### Qbinom()
+The function qbinom() calculates the quantile function of binomial distribution.
+```{r}
+qbinom(p = 0.77, size = 5, prob = 0.33)
+```
